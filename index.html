@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Startup Budget Proposal - Wanyu Xu</title>
+  <title>Startup Budget Proposal</title>
   <style>
     :root {
       --bg: #f6f8fb;
@@ -93,9 +93,29 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 1.1fr 1.4fr;
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
       align-items: start;
+    }
+
+    .top-stack {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .bottom-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr !important;
+      gap: 20px;
+      align-items: start;
+      margin-top: 20px;
+    }
+
+    .sticky-panel {
+      position: sticky;
+      top: 20px;
+      align-self: start;
     }
 
     .card {
@@ -120,6 +140,7 @@
 
     .research-list {
       display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
 
@@ -128,6 +149,21 @@
       border-radius: 14px;
       padding: 14px;
       background: #fbfdff;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .research-item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      border-color: #f2cc2f;
+      background: #fffdf0;
+    }
+
+    .research-item.active-project {
+      border-color: #d4a800;
+      background: #fff7cc;
+      box-shadow: 0 10px 22px rgba(255, 205, 0, 0.22);
     }
 
     .research-item h3 {
@@ -139,6 +175,30 @@
       margin: 0;
       color: var(--muted);
       font-size: 0.95rem;
+    }
+
+    .project-total {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #efe6b0;
+      font-size: 0.92rem;
+      color: #7a5c00;
+      font-weight: 600;
+      display: none;
+    }
+
+    .research-item.active-project .project-total,
+    .research-item:hover .project-total,
+    .research-item:focus .project-total {
+      display: block;
+    }
+
+    .project-total .amount {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.1rem;
+      color: #1f2937;
+      font-weight: 700;
     }
 
     .conditions {
@@ -183,7 +243,7 @@
 
     .summary-bar {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-bottom: 18px;
     }
@@ -211,11 +271,12 @@
 
     .tables {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
     }
 
     .table-card {
+      min-width: 0;
       border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
@@ -233,6 +294,82 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .detail-name {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .expand-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid #e5d37a;
+      background: #fff9dd;
+      color: #7a5c00;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .expand-btn:hover {
+      background: #fff2b3;
+    }
+
+    .detail-main {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .item-link {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.82rem;
+      color: #64748b;
+      overflow-wrap: anywhere;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 260px;
+      background-color: #1f2937;
+      color: #fff;
+      text-align: left;
+      border-radius: 6px;
+      padding: 8px 10px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 0.8rem;
+      line-height: 1.3;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .sub-row td {
+      padding-left: 34px;
+      font-size: 0.9rem;
+      background: #fffdf4;
+    }
+
+    .sub-row .item-link,
+    .sub-row .item-desc {
+      margin-top: 2px;
     }
 
     th, td {
@@ -252,6 +389,16 @@
     td:last-child, th:last-child {
       text-align: right;
       white-space: nowrap;
+    }
+
+    .project-match {
+      background: #fff7cc;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: inset 4px 0 0 #FFCD00;
+    }
+
+    .project-match td:first-child {
+      font-weight: 600;
     }
 
     .removed {
@@ -284,7 +431,9 @@
     @media (max-width: 1050px) {
       .grid,
       .tables,
-      .summary-bar {
+      .summary-bar,
+      .bottom-layout,
+      .research-list {
         grid-template-columns: 1fr;
       }
     }
@@ -303,33 +452,38 @@
       </p>
     </section>
 
-    <div class="grid">
+    <div class="top-stack">
       <section class="card">
         <h2>Prospective Research Directions</h2>
         <p class="small-note">These are research directions and projects I would be excited to explore if I join Centre College.</p>
         <div class="research-list">
-          <div class="research-item">
+          <div class="research-item" data-project="1" tabindex="0">
             <h3>AI-Assisted Immersive STEM Education</h3>
             <p>
               Explores the use of AI and augmented reality to create interactive, immersive learning environments in engineering education. Potential directions include visual overlays for lab procedures, real-time guidance, intuitive visualization of complex engineering concepts, and adaptive feedback systems to enhance student engagement and understanding.
             </p>
+            <div class="project-total">Related project-based cost<span class="amount">$0</span></div>
           </div>
-          <div class="research-item">
+          <div class="research-item" data-project="2" tabindex="0">
             <h3>FERPA-Compliant Local AI Tools for Pedagogy and ABET Support</h3>
             <p>
               Exploration of locally deployed AI systems that support teaching and assessment while ensuring data privacy and FERPA compliance, including automated feedback on student work, structured ABET outcome mapping, rubric alignment checking, and streamlined documentation for continuous improvement. <strong>It would be valuable for this to develop into a campus-wide initiative.</strong>
             </p>
+            <div class="project-total">Related project-based cost<span class="amount">$0</span></div>
           </div>
-          <div class="research-item">
+          <div class="research-item" data-project="3" tabindex="0">
             <h3>Engineering Design, Human-AI Interaction, and Human-AI Collaboration</h3>
             <p>
               Investigation of how undergraduate students engage with AI tools during the engineering design process, with an emphasis on early-stage ideation, decision-making, and the development of effective and responsible human–AI collaboration practices. This work aims to better understand human–AI collaboration and to develop strategies that support learning, creativity, and responsible AI use in engineering education.
             </p>
+            <div class="project-total">Related project-based cost<span class="amount">$0</span></div>
           </div>
         </div>
       </section>
+    </div>
 
-      <section class="card">
+    <div class="bottom-layout">
+      <section class="card sticky-panel">
         <h2>Scenario Controls</h2>
         <p class="small-note">Toggle conditions to indicate that these items may be supported through separate funding resources or institutional investment. When selected, those items are removed from the startup request. Annual expenses are calculated as recurring costs over <strong>three years</strong>, and the total updates automatically.</p>
 
@@ -362,7 +516,7 @@
         <div class="summary-bar">
           <div class="stat total">
             <span class="label">Total Startup Request</span>
-            <div class="value" id="grandTotal">$148,274</div>
+            <div class="value" id="grandTotal">$147,974</div>
           </div>
           <div class="stat">
             <span class="label">Annual Expenses (3 Years)</span>
@@ -370,12 +524,9 @@
           </div>
           <div class="stat">
             <span class="label">Project-Based</span>
-            <div class="value" id="projectTotal">$83,500</div>
+            <div class="value" id="projectTotal">$89,000</div>
           </div>
-          <div class="stat">
-            <span class="label">Fixed</span>
-            <div class="value" id="fixedTotal">$5,800</div>
-          </div>
+          
         </div>
 
         <div>
@@ -384,16 +535,15 @@
           <span class="pill" id="pillHPC">No shared HPC assumed</span>
         </div>
       </section>
-    </div>
 
-    <section class="card" style="margin-top: 20px;">
-      <h2>Detailed Budget</h2>
+      <section class="card">
+        <h2>Detailed Budget</h2>
       <div class="tables">
         <div class="table-card">
           <h3>Annual Expenses</h3>
           <table>
             <thead>
-              <tr><th>Item</th><th>Cost</th></tr>
+              <tr><th>Item</th><th>Cost (w/ taxes)</th></tr>
             </thead>
             <tbody id="annualTable"></tbody>
           </table>
@@ -403,104 +553,114 @@
           <h3>Project-Based</h3>
           <table>
             <thead>
-              <tr><th>Item</th><th>Cost</th></tr>
+              <tr><th>Item</th><th>Cost (w/ taxes)</th></tr>
             </thead>
             <tbody id="projectTable"></tbody>
           </table>
         </div>
 
-        <div class="table-card">
-          <h3>Fixed</h3>
-          <table>
-            <thead>
-              <tr><th>Item</th><th>Cost</th></tr>
-            </thead>
-            <tbody id="fixedTable"></tbody>
-          </table>
-        </div>
+        
       </div>
 
       
     </section>
+    </div>
 
-    <section class="card" style="margin-top: 20px;">
-      <h2>Custom Adjustment Panel</h2>
-      <p class="small-note">Manually include/exclude items or adjust costs to explore alternative startup scenarios.</p>
-
-      <div class="tables">
-        <div class="table-card">
-          <h3>Annual (Editable)</h3>
-          <table><tbody id="annualEdit"></tbody></table>
-        </div>
-        <div class="table-card">
-          <h3>Project-Based (Editable)</h3>
-          <table><tbody id="projectEdit"></tbody></table>
-        </div>
-        <div class="table-card">
-          <h3>Fixed (Editable)</h3>
-          <table><tbody id="fixedEdit"></tbody></table>
-        </div>
-      </div>
-
-      <div class="summary-bar" style="margin-top:16px;">
-        <div class="stat total">
-          <span class="label">Adjusted Total</span>
-          <div class="value" id="customTotal">$0</div>
-        </div>
-        <div class="stat">
-          <span class="label">Adjusted Annual (3 yrs)</span>
-          <div class="value" id="customAnnual">$0</div>
-        </div>
-        <div class="stat">
-          <span class="label">Adjusted Project</span>
-          <div class="value" id="customProject">$0</div>
-        </div>
-        <div class="stat">
-          <span class="label">Adjusted Fixed</span>
-          <div class="value" id="customFixed">$0</div>
-        </div>
-      </div>
-    </section>
-  </div>
+    </div>
 
   <script>
     const annualItems = [
-      ["Conference Registration - ASEE", 800],
-      ["Conference Registration - IDETC", 1050],
-      ["Professional Membership - ASEE", 150],
-      ["Professional Membership - ASME", 158],
-      ["Travel expenses to conferences (twice)", 4000],
-      ["Open access cost", 3000],
-      ["Books / journal / article access / teaching materials", 500],
-      ["Subscription", 1000],
-      ["Token / credit / cloud service", 2000],
-      ["Software", 500],
-      ["Miscellaneous", 500],
-      ["Student stipend", 6000, "studentSupport"]
+      {
+        name: "Conference Registration",
+        cost: 1845,
+        children: [
+          {
+            name: "ASEE annual conference",
+            cost: 795,
+            link: "https://www.asee.org/events/Conferences-and-Meetings/2026-Annual-Conference-Exposition/Registration"
+          },
+          {
+            name: "IDETC (ASME)",
+            cost: 1050,
+            link: "https://event.asme.org/IDETC-CIE/Register"
+          }
+        ]
+      },
+      {
+        name: "Professional Membership",
+        cost: 308,
+        children: [
+          {
+            name: "ASEE",
+            cost: 150,
+            link: "https://www.asee.org/membership-and-communities/membership#individual"
+          },
+          {
+            name: "ASME",
+            cost: 158,
+            link: "https://www.asme.org/membership/membership-benefits?gclsrc=aw.ds&&utm_term=asme%20professional%20membership&utm_campaign=&utm_source=adwords&utm_medium=ppc&hsa_acc=1600986049&hsa_cam=12514346085&hsa_grp=116941350377&hsa_ad=529382960343&hsa_src=g&hsa_tgt=kwd-1189834086719&hsa_kw=asme%20professional%20membership&hsa_mt=p&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=12514346085&gbraid=0AAAAAD_X-u1m9OfevxzZsDKaNqCuVN6l-&gclid=Cj0KCQjw1ZjOBhCmARIsADDuFTDDxNx_nNttIFSB-x6JaE0C3OEJcqjDp4SvyYXB6cZooqp-lhvNk_MaAvTzEALw_wcB"
+          }
+        ]
+      },
+      {
+        name: "Travel expenses to Conferences (twice)",
+        cost: 4000
+      },
+      {
+        name: "Open Access Cost",
+        cost: 3000,
+        link: "https://www.asme.org/publications-submissions/journals/information-for-authors/open-access"
+      },
+      {
+        name: "Subscription",
+        cost: 470.64,
+        children: [
+          {
+            name: "ChatGPT",
+            cost: 254.4,
+            link: "https://chatgpt.com/pricing/"
+          },
+          {
+            name: "Claude",
+            cost: 216.24,
+            link: "https://claude.ai/upgrade"
+          }
+        ]
+      },
+      {
+        name: "Token/Credit/Cloud Service",
+        cost: 2000,
+        link: "https://openai.com/api/pricing/"
+      },
+      {
+        name: "Miscellaneous",
+        cost: 1500,
+        desc: "Software purchase/subscription, books, journal/article access, and teaching materials when not available through the library or college."
+      },
+      {
+        name: "Student stipend",
+        cost: 6000,
+        flag: "studentSupport"
+      }
     ];
 
     const projectItems = [
-      ["Workstation laptop", 4000],
-      ["Human-subject research incentives", 5000],
-      ["User study equipment (EEG, eye tracking, etc.)", 10000],
-      ["Light prototyping tools / materials", 3000],
-      ["Design exploration tools (digital sketch tools)", 3000],
-      ["Dataset", 500],
-      ["Travel fund (visit collaborators, etc.)", 3000],
-      ["High-performance workstation", 20000, "sharedHPC"],
-      ["Motion capture device (wearable)", 5000],
-      ["Robotic arms", 6000, "sharedProto"],
-      ["3D scanner", 8000, "sharedProto"],
-      ["AR/MR device (e.g., Magic Leap)", 5000],
-      ["Student travel fund", 6000, "studentSupport"],
-      ["Student research fund", 5000, "studentSupport"]
-    ];
-
-    const fixedItems = [
-      ["Display", 1000],
-      ["Data storage + backup", 3000],
-      ["Whiteboard", 300],
-      ["Peripherals", 1500]
+      ["Workstation laptop", 4000, null, [1,2,3]],
+      ["Human-subject research incentives", 5000, null, [2,3]],
+      ["User study equipment (EEG, eye tracking, etc.)", 10000, null, [3]],
+      ["Light prototyping tools / materials", 3000, null, [1,3]],
+      ["Design exploration tools (digital sketch tools, like iPad Pro with Pencil plus Procreate purchase/subscription)", 3000, null, [3]],
+      ["Dataset (e.g. wind turbines database from thewindpower.net)", 500, null, [3]],
+      ["Travel fund (visit collaborators, etc.)", 3000, null, [1,3]],
+      ["High-performance workstation (should be able to run GPT-4-class or similar open-source LLMs locally smoothly)", 20000, "sharedHPC", [2]],
+      ["Motion capture device (wearable, mainly for hands)", 5000, null, [1,3]],
+      ["Robotic arms", 6000, "sharedProto", [1,3]],
+      ["3D scanner", 8000, "sharedProto", [1]],
+      ["AR/MR device (e.g., Magic Leap)", 5000, null, [1]],
+      ["Student travel fund", 6000, "studentSupport", [1,3]],
+      ["Student research fund (if they bring their ideas to me)", 5000, "studentSupport", []],
+      ["Data storage + backup", 3000, null, [1,2,3]],
+      ["Peripherals", 2500, null, [1,3]]
     ];
 
     const ids = {
@@ -509,21 +669,112 @@
       sharedHPC: document.getElementById('sharedHPC')
     };
 
+    const researchCards = document.querySelectorAll('.research-item');
+    let lockedProject = null;
+    const expandedRows = {};
+
     function money(n) {
-      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+      }).format(n);
     }
 
     function isRemoved(flag) {
       return flag && ids[flag] && ids[flag].checked;
     }
 
-    function renderTable(targetId, items) {
-      const tbody = document.getElementById(targetId);
+    function getItemCost(item) {
+      return Number(item.cost || 0);
+    }
+
+    function getItemFlag(item) {
+      return item.flag || null;
+    }
+
+    function getChildren(item) {
+      return Array.isArray(item.children) ? item.children : [];
+    }
+
+    function getProjectTotal(projectId) {
+      return projectItems.reduce((sum, item) => {
+        const [, cost, flag, projects] = item;
+        const matched = Array.isArray(projects) && projects.includes(Number(projectId));
+        return sum + (matched && !isRemoved(flag) ? cost : 0);
+      }, 0);
+    }
+
+    function updateProjectCardTotals() {
+      researchCards.forEach(card => {
+        const amount = card.querySelector('.project-total .amount');
+        if (amount) amount.textContent = money(getProjectTotal(card.dataset.project));
+      });
+    }
+
+    function renderAnnualTable() {
+      const tbody = document.getElementById('annualTable');
       tbody.innerHTML = '';
 
-      items.forEach(([name, cost, flag]) => {
-        const removed = isRemoved(flag);
+      annualItems.forEach((item, idx) => {
+        const removed = isRemoved(getItemFlag(item));
+        const rowKey = `annual-${idx}`;
+        const expanded = expandedRows[rowKey] === true;
+        const children = getChildren(item);
+        const expandable = children.length > 0;
+
         const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="${removed ? 'removed' : ''}">
+            <div class="detail-name">
+              ${expandable ? `<button class="expand-btn" type="button" data-row-key="${rowKey}">${expanded ? '−' : '+'}</button>` : '<span style="width:22px; display:inline-block;"></span>'}
+              <div class="detail-main">
+                <div>${item.name} ${item.desc ? `<span class="tooltip">ⓘ<span class="tooltip-text">${item.desc}</span></span>` : ''}</div>
+                ${item.link ? `<a class="item-link" href="${item.link}" target="_blank" rel="noopener noreferrer">View source</a>` : ''}
+              </div>
+            </div>
+          </td>
+          <td class="${removed ? 'removed' : ''}">${removed ? money(0) : money(getItemCost(item))}</td>
+        `;
+        tbody.appendChild(tr);
+
+        if (expandable && expanded) {
+          children.forEach(child => {
+            const childRow = document.createElement('tr');
+            childRow.classList.add('sub-row');
+            childRow.innerHTML = `
+              <td>
+                <div class="detail-main">
+                  <div>- ${child.link ? `<a href="${child.link}" target="_blank" rel="noopener noreferrer">${child.name}</a>` : child.name}</div>
+                </div>
+              </td>
+              <td>${money(child.cost)}</td>
+            `;
+            tbody.appendChild(childRow);
+          });
+        }
+      });
+
+      tbody.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.rowKey;
+          expandedRows[key] = !expandedRows[key];
+          renderAnnualTable();
+        });
+      });
+    }
+
+    function renderProjectTable() {
+      const tbody = document.getElementById('projectTable');
+      tbody.innerHTML = '';
+      const activeProject = document.body.dataset.activeProject || '';
+
+      projectItems.forEach(item => {
+        const [name, cost, flag, projects] = item;
+        const removed = isRemoved(flag);
+        const highlight = activeProject && Array.isArray(projects) && projects.includes(Number(activeProject));
+        const tr = document.createElement('tr');
+        if (highlight) tr.classList.add('project-match');
         tr.innerHTML = `
           <td class="${removed ? 'removed' : ''}">${name}</td>
           <td class="${removed ? 'removed' : ''}">${removed ? money(0) : money(cost)}</td>
@@ -532,8 +783,15 @@
       });
     }
 
-    function total(items) {
-      return items.reduce((sum, [, cost, flag]) => sum + (isRemoved(flag) ? 0 : cost), 0);
+    function totalAnnual() {
+      return annualItems.reduce((sum, item) => sum + (isRemoved(getItemFlag(item)) ? 0 : getItemCost(item)), 0);
+    }
+
+    function totalProject() {
+      return projectItems.reduce((sum, item) => {
+        const [, cost, flag] = item;
+        return sum + (isRemoved(flag) ? 0 : cost);
+      }, 0);
     }
 
     function updatePills() {
@@ -550,89 +808,59 @@
         : 'No shared HPC assumed';
     }
 
+    function applyProject(projectId) {
+      document.body.dataset.activeProject = projectId || '';
+      researchCards.forEach(card => {
+        card.classList.toggle('active-project', card.dataset.project === projectId);
+      });
+      renderProjectTable();
+      updateProjectCardTotals();
+    }
+
     function update() {
-      const annualBase = total(annualItems);
-      const annual = annualBase * 3;
-      const project = total(projectItems);
-      const fixed = total(fixedItems);
-      const grand = annual + project + fixed;
+      const annual = totalAnnual() * 3;
+      const project = totalProject();
+      const grand = annual + project;
 
       document.getElementById('annualTotal').textContent = money(annual);
       document.getElementById('projectTotal').textContent = money(project);
-      document.getElementById('fixedTotal').textContent = money(fixed);
       document.getElementById('grandTotal').textContent = money(grand);
 
-      renderTable('annualTable', annualItems);
-      renderTable('projectTable', projectItems);
-      renderTable('fixedTable', fixedItems);
+      renderAnnualTable();
+      renderProjectTable();
       updatePills();
-
-      renderEditable();
-      updateCustomTotals();
+      updateProjectCardTotals();
     }
+
+    researchCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        if (!lockedProject) applyProject(card.dataset.project);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        if (!lockedProject) applyProject('');
+      });
+
+      card.addEventListener('focus', () => {
+        if (!lockedProject) applyProject(card.dataset.project);
+      });
+
+      card.addEventListener('blur', () => {
+        if (!lockedProject) applyProject('');
+      });
+
+      card.addEventListener('click', () => {
+        if (lockedProject === card.dataset.project) {
+          lockedProject = null;
+          applyProject('');
+        } else {
+          lockedProject = card.dataset.project;
+          applyProject(lockedProject);
+        }
+      });
+    });
 
     Object.values(ids).forEach(input => input.addEventListener('change', update));
-
-    let customState = {};
-
-    function renderEditable() {
-      buildEditTable('annualEdit', annualItems, 'annual');
-      buildEditTable('projectEdit', projectItems, 'project');
-      buildEditTable('fixedEdit', fixedItems, 'fixed');
-    }
-
-    function buildEditTable(target, items, group) {
-      const tbody = document.getElementById(target);
-      tbody.innerHTML = '';
-
-      items.forEach((item, i) => {
-        const key = group + i;
-        if (!customState[key]) {
-          customState[key] = { active: true, cost: item[1] };
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>
-            <input type="checkbox" ${customState[key].active ? 'checked' : ''} onchange="toggleItem('${key}')">
-            <span style="margin-left:6px;">${item[0]}</span>
-          </td>
-          <td>
-            <input type="number" value="${customState[key].cost}" style="width:90px" onchange="editCost('${key}', this.value)">
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function toggleItem(key) {
-      customState[key].active = !customState[key].active;
-      updateCustomTotals();
-    }
-
-    function editCost(key, val) {
-      customState[key].cost = Number(val);
-      updateCustomTotals();
-    }
-
-    function sumCustom(group, items) {
-      return items.reduce((sum, _, i) => {
-        const key = group + i;
-        return sum + (customState[key].active ? customState[key].cost : 0);
-      }, 0);
-    }
-
-    function updateCustomTotals() {
-      const a = sumCustom('annual', annualItems) * 3;
-      const p = sumCustom('project', projectItems);
-      const f = sumCustom('fixed', fixedItems);
-      const g = a + p + f;
-
-      document.getElementById('customAnnual').textContent = money(a);
-      document.getElementById('customProject').textContent = money(p);
-      document.getElementById('customFixed').textContent = money(f);
-      document.getElementById('customTotal').textContent = money(g);
-    }
 
     update();
   </script>
