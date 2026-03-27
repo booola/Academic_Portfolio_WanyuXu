@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Startup Budget Proposal - Wanyu Xu</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #FFCD00;
+      --accent-soft: #FFF4B3;
+      --warn: #b45309;
+      --good: #166534;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .hero {
+      background: #FFF7CC;
+      color: #1f2937;
+      border-radius: 24px;
+      padding: 28px 28px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #FFE680;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      background: #FFCD00;
+    }
+
+    .hero .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .hero .badge {
+      background: #FFCD00;
+      color: #1f2937;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid #e6b800;
+    }
+
+    .hero .name {
+      font-size: 0.95rem;
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 900px;
+      color: #1f2937;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 1.25rem;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: -4px;
+      margin-bottom: 14px;
+    }
+
+    .research-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .research-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fbfdff;
+    }
+
+    .research-item h3 {
+      margin: 0 0 6px;
+      font-size: 1.02rem;
+    }
+
+    .research-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .conditions {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .check-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fcfffe;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .check-row label {
+      cursor: pointer;
+      display: block;
+      width: 100%;
+    }
+
+    .check-row strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .check-row span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      border-radius: 16px;
+      padding: 16px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+    }
+
+    .stat .label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 1.45rem;
+      font-weight: 700;
+    }
+
+    .stat.total { background: var(--accent-soft); }
+
+    .tables {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .table-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .table-card h3 {
+      margin: 0;
+      padding: 14px 16px;
+      background: #FFCD00;
+      color: #1f2937;
+      font-size: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #edf2f7;
+      vertical-align: top;
+      font-size: 0.94rem;
+    }
+
+    th {
+      text-align: left;
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    td:last-child, th:last-child {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .removed {
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: #fff8eb;
+      border: 1px solid #f6dfb3;
+      border-radius: 14px;
+      color: #7c5b12;
+      font-size: 0.95rem;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #FFF8CC;
+      border: 1px solid #FFE680;
+      color: #7a5c00;
+      font-size: 0.86rem;
+      margin-right: 8px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 1050px) {
+      .grid,
+      .tables,
+      .summary-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="meta">
+        <div class="badge">Faculty Startup Proposal</div>
+        <div class="name">Wanyu Xu</div>
+      </div>
+      <h1>Startup Budget Proposal</h1>
+      <p>
+        Beyond teaching, I would like to explore possibilities in pedagogical research and AI tools in engineering design while staying closely connected with the campus community. This page outlines a potential startup budget to support these directions and provides flexible scenarios based on available institutional resources.
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Prospective Research Directions</h2>
+        <p class="small-note">These are research directions and projects I would be excited to explore if I join Centre College.</p>
+        <div class="research-list">
+          <div class="research-item">
+            <h3>AI-Assisted Immersive STEM Education</h3>
+            <p>
+              Explores the use of AI and augmented reality to create interactive, immersive learning environments in engineering education. Potential directions include visual overlays for lab procedures, real-time guidance, intuitive visualization of complex engineering concepts, and adaptive feedback systems to enhance student engagement and understanding.
+            </p>
+          </div>
+          <div class="research-item">
+            <h3>FERPA-Compliant Local AI Tools for Pedagogy and ABET Support</h3>
+            <p>
+              Exploration of locally deployed AI systems that support teaching and assessment while ensuring data privacy and FERPA compliance, including automated feedback on student work, structured ABET outcome mapping, rubric alignment checking, and streamlined documentation for continuous improvement. <strong>It would be valuable for this to develop into a campus-wide initiative.</strong>
+            </p>
+          </div>
+          <div class="research-item">
+            <h3>Engineering Design, Human-AI Interaction, and Human-AI Collaboration</h3>
+            <p>
+              Investigation of how undergraduate students engage with AI tools during the engineering design process, with an emphasis on early-stage ideation, decision-making, and the development of effective and responsible human–AI collaboration practices. This work aims to better understand human–AI collaboration and to develop strategies that support learning, creativity, and responsible AI use in engineering education.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Scenario Controls</h2>
+        <p class="small-note">Toggle conditions to indicate that these items may be supported through separate funding resources or institutional investment. When selected, those items are removed from the startup request. Annual expenses are calculated as recurring costs over <strong>three years</strong>, and the total updates automatically.</p>
+
+        <div class="conditions">
+          <div class="check-row">
+            <input type="checkbox" id="studentSupport" />
+            <label for="studentSupport">
+              <strong>Separate support exists for student-initiated research</strong>
+              <span>Removes startup requests for student stipend, student travel fund, and student research fund.</span>
+            </label>
+          </div>
+
+          <div class="check-row">
+            <input type="checkbox" id="sharedProto" />
+            <label for="sharedProto">
+              <strong>College provides a shared prototyping space</strong>
+              <span>Removes startup requests for the 3D scanner and robotic arms if those are covered through a shared facility.</span>
+            </label>
+          </div>
+
+          <div class="check-row">
+            <input type="checkbox" id="sharedHPC" />
+            <label for="sharedHPC">
+              <strong>Access to a shared high-performance workstation for local LLM deployment</strong>
+              <span>Removes the high-performance workstation from the startup request.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="summary-bar">
+          <div class="stat total">
+            <span class="label">Total Startup Request</span>
+            <div class="value" id="grandTotal">$148,274</div>
+          </div>
+          <div class="stat">
+            <span class="label">Annual Expenses (3 Years)</span>
+            <div class="value" id="annualTotal">$58,974</div>
+          </div>
+          <div class="stat">
+            <span class="label">Project-Based</span>
+            <div class="value" id="projectTotal">$83,500</div>
+          </div>
+          <div class="stat">
+            <span class="label">Fixed</span>
+            <div class="value" id="fixedTotal">$5,800</div>
+          </div>
+        </div>
+
+        <div>
+          <span class="pill" id="pillStudent">No external student-project support assumed</span>
+          <span class="pill" id="pillProto">No shared prototyping space assumed</span>
+          <span class="pill" id="pillHPC">No shared HPC assumed</span>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top: 20px;">
+      <h2>Detailed Budget</h2>
+      <div class="tables">
+        <div class="table-card">
+          <h3>Annual Expenses</h3>
+          <table>
+            <thead>
+              <tr><th>Item</th><th>Cost</th></tr>
+            </thead>
+            <tbody id="annualTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card">
+          <h3>Project-Based</h3>
+          <table>
+            <thead>
+              <tr><th>Item</th><th>Cost</th></tr>
+            </thead>
+            <tbody id="projectTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card">
+          <h3>Fixed</h3>
+          <table>
+            <thead>
+              <tr><th>Item</th><th>Cost</th></tr>
+            </thead>
+            <tbody id="fixedTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      
+    </section>
+
+    <section class="card" style="margin-top: 20px;">
+      <h2>Custom Adjustment Panel</h2>
+      <p class="small-note">Manually include/exclude items or adjust costs to explore alternative startup scenarios.</p>
+
+      <div class="tables">
+        <div class="table-card">
+          <h3>Annual (Editable)</h3>
+          <table><tbody id="annualEdit"></tbody></table>
+        </div>
+        <div class="table-card">
+          <h3>Project-Based (Editable)</h3>
+          <table><tbody id="projectEdit"></tbody></table>
+        </div>
+        <div class="table-card">
+          <h3>Fixed (Editable)</h3>
+          <table><tbody id="fixedEdit"></tbody></table>
+        </div>
+      </div>
+
+      <div class="summary-bar" style="margin-top:16px;">
+        <div class="stat total">
+          <span class="label">Adjusted Total</span>
+          <div class="value" id="customTotal">$0</div>
+        </div>
+        <div class="stat">
+          <span class="label">Adjusted Annual (3 yrs)</span>
+          <div class="value" id="customAnnual">$0</div>
+        </div>
+        <div class="stat">
+          <span class="label">Adjusted Project</span>
+          <div class="value" id="customProject">$0</div>
+        </div>
+        <div class="stat">
+          <span class="label">Adjusted Fixed</span>
+          <div class="value" id="customFixed">$0</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const annualItems = [
+      ["Conference Registration - ASEE", 800],
+      ["Conference Registration - IDETC", 1050],
+      ["Professional Membership - ASEE", 150],
+      ["Professional Membership - ASME", 158],
+      ["Travel expenses to conferences (twice)", 4000],
+      ["Open access cost", 3000],
+      ["Books / journal / article access / teaching materials", 500],
+      ["Subscription", 1000],
+      ["Token / credit / cloud service", 2000],
+      ["Software", 500],
+      ["Miscellaneous", 500],
+      ["Student stipend", 6000, "studentSupport"]
+    ];
+
+    const projectItems = [
+      ["Workstation laptop", 4000],
+      ["Human-subject research incentives", 5000],
+      ["User study equipment (EEG, eye tracking, etc.)", 10000],
+      ["Light prototyping tools / materials", 3000],
+      ["Design exploration tools (digital sketch tools)", 3000],
+      ["Dataset", 500],
+      ["Travel fund (visit collaborators, etc.)", 3000],
+      ["High-performance workstation", 20000, "sharedHPC"],
+      ["Motion capture device (wearable)", 5000],
+      ["Robotic arms", 6000, "sharedProto"],
+      ["3D scanner", 8000, "sharedProto"],
+      ["AR/MR device (e.g., Magic Leap)", 5000],
+      ["Student travel fund", 6000, "studentSupport"],
+      ["Student research fund", 5000, "studentSupport"]
+    ];
+
+    const fixedItems = [
+      ["Display", 1000],
+      ["Data storage + backup", 3000],
+      ["Whiteboard", 300],
+      ["Peripherals", 1500]
+    ];
+
+    const ids = {
+      studentSupport: document.getElementById('studentSupport'),
+      sharedProto: document.getElementById('sharedProto'),
+      sharedHPC: document.getElementById('sharedHPC')
+    };
+
+    function money(n) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+    }
+
+    function isRemoved(flag) {
+      return flag && ids[flag] && ids[flag].checked;
+    }
+
+    function renderTable(targetId, items) {
+      const tbody = document.getElementById(targetId);
+      tbody.innerHTML = '';
+
+      items.forEach(([name, cost, flag]) => {
+        const removed = isRemoved(flag);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="${removed ? 'removed' : ''}">${name}</td>
+          <td class="${removed ? 'removed' : ''}">${removed ? money(0) : money(cost)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function total(items) {
+      return items.reduce((sum, [, cost, flag]) => sum + (isRemoved(flag) ? 0 : cost), 0);
+    }
+
+    function updatePills() {
+      document.getElementById('pillStudent').textContent = ids.studentSupport.checked
+        ? 'Student-project support covered separately'
+        : 'No external student-project support assumed';
+
+      document.getElementById('pillProto').textContent = ids.sharedProto.checked
+        ? 'Shared prototyping space assumed'
+        : 'No shared prototyping space assumed';
+
+      document.getElementById('pillHPC').textContent = ids.sharedHPC.checked
+        ? 'Shared HPC assumed'
+        : 'No shared HPC assumed';
+    }
+
+    function update() {
+      const annualBase = total(annualItems);
+      const annual = annualBase * 3;
+      const project = total(projectItems);
+      const fixed = total(fixedItems);
+      const grand = annual + project + fixed;
+
+      document.getElementById('annualTotal').textContent = money(annual);
+      document.getElementById('projectTotal').textContent = money(project);
+      document.getElementById('fixedTotal').textContent = money(fixed);
+      document.getElementById('grandTotal').textContent = money(grand);
+
+      renderTable('annualTable', annualItems);
+      renderTable('projectTable', projectItems);
+      renderTable('fixedTable', fixedItems);
+      updatePills();
+
+      renderEditable();
+      updateCustomTotals();
+    }
+
+    Object.values(ids).forEach(input => input.addEventListener('change', update));
+
+    let customState = {};
+
+    function renderEditable() {
+      buildEditTable('annualEdit', annualItems, 'annual');
+      buildEditTable('projectEdit', projectItems, 'project');
+      buildEditTable('fixedEdit', fixedItems, 'fixed');
+    }
+
+    function buildEditTable(target, items, group) {
+      const tbody = document.getElementById(target);
+      tbody.innerHTML = '';
+
+      items.forEach((item, i) => {
+        const key = group + i;
+        if (!customState[key]) {
+          customState[key] = { active: true, cost: item[1] };
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <input type="checkbox" ${customState[key].active ? 'checked' : ''} onchange="toggleItem('${key}')">
+            <span style="margin-left:6px;">${item[0]}</span>
+          </td>
+          <td>
+            <input type="number" value="${customState[key].cost}" style="width:90px" onchange="editCost('${key}', this.value)">
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleItem(key) {
+      customState[key].active = !customState[key].active;
+      updateCustomTotals();
+    }
+
+    function editCost(key, val) {
+      customState[key].cost = Number(val);
+      updateCustomTotals();
+    }
+
+    function sumCustom(group, items) {
+      return items.reduce((sum, _, i) => {
+        const key = group + i;
+        return sum + (customState[key].active ? customState[key].cost : 0);
+      }, 0);
+    }
+
+    function updateCustomTotals() {
+      const a = sumCustom('annual', annualItems) * 3;
+      const p = sumCustom('project', projectItems);
+      const f = sumCustom('fixed', fixedItems);
+      const g = a + p + f;
+
+      document.getElementById('customAnnual').textContent = money(a);
+      document.getElementById('customProject').textContent = money(p);
+      document.getElementById('customFixed').textContent = money(f);
+      document.getElementById('customTotal').textContent = money(g);
+    }
+
+    update();
+  </script>
+</body>
+</html>
