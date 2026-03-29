@@ -525,14 +525,90 @@
       margin-top: 6px;
     }
 
+    .custom-panel {
+      margin-top: 22px;
+    }
+
+    .custom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .custom-list {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .custom-list-header {
+      background: #fff8cc;
+      border-bottom: 1px solid #f2df8a;
+      padding: 12px 14px;
+      font-weight: 700;
+      color: #5f4b00;
+    }
+
+    .custom-items {
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    .custom-row {
+      display: grid;
+      grid-template-columns: 26px 1fr 120px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .custom-row:last-child {
+      border-bottom: 0;
+    }
+
+    .custom-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .custom-row input[type="number"] {
+      width: 100%;
+      border: 1px solid #d7dee8;
+      border-radius: 10px;
+      padding: 7px 8px;
+      font: inherit;
+    }
+
+    .custom-name {
+      font-size: 0.94rem;
+      color: #1f2937;
+    }
+
+    .custom-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .custom-summary .stat {
+      min-height: 110px;
+    }
+
     @media (max-width: 1050px) {
       .grid,
       .tables,
       .summary-bar,
       .bottom-layout,
-      .research-list {
+      .research-list,
+      .custom-grid,
+      .custom-summary {
         grid-template-columns: 1fr;
       }
+    }
     }
   </style>
 </head>
@@ -555,21 +631,24 @@
         <p class="small-note">These are research directions and projects I would be excited to explore if I join Centre College.</p>
         <div class="research-list">
           <div class="research-item" data-project="1" tabindex="0">
-            <h3>Project 1: AI-Assisted Immersive STEM Education</h3>
+            <h3>AI-Assisted Immersive STEM Education</h3>
+            <div class="pill" style="margin: 0 0 8px 0;">Project 1</div>
             <p>
               Explores the use of AI and augmented reality to create interactive, immersive learning environments in engineering education. Potential directions include visual overlays for lab procedures, real-time guidance, intuitive visualization of complex engineering concepts, and adaptive feedback systems to enhance student engagement and understanding.
             </p>
             <div class="project-total">Related project-based cost<span class="amount">$0</span></div>
           </div>
           <div class="research-item" data-project="2" tabindex="0">
-            <h3>Project 2: FERPA-Compliant Local AI Tools for Pedagogy and ABET Support</h3>
+            <h3>FERPA-Compliant Local AI Tools for Pedagogy and ABET Support</h3>
+            <div class="pill" style="margin: 0 0 8px 0;">Project 2</div>
             <p>
               Exploration of locally deployed AI systems that support teaching and assessment while ensuring data privacy and FERPA compliance, including automated feedback on student work, structured ABET outcome mapping, rubric alignment checking, and streamlined documentation for continuous improvement. <strong>It would be valuable for this to develop into a campus-wide initiative.</strong>
             </p>
             <div class="project-total">Related project-based cost<span class="amount">$0</span></div>
           </div>
           <div class="research-item" data-project="3" tabindex="0">
-            <h3>Project 3: Engineering Design, Human-AI Interaction, and Human-AI Collaboration</h3>
+            <h3>Engineering Design, Human-AI Interaction, and Human-AI Collaboration</h3>
+            <div class="pill" style="margin: 0 0 8px 0;">Project 3</div>
             <p>
               Investigation of how undergraduate students engage with AI tools during the engineering design process, with an emphasis on early-stage ideation, decision-making, and the development of effective and responsible human–AI collaboration practices. This work aims to better understand human–AI collaboration and to develop strategies that support learning, creativity, and responsible AI use in engineering education.
             </p>
@@ -608,7 +687,7 @@
               <span>Removes the high-performance workstation from the startup request.</span>
             </label>
           </div>
-          
+
           <div class="check-row">
             <input type="checkbox" id="niceToHave" />
             <label for="niceToHave">
@@ -691,7 +770,36 @@
     </section>
     </div>
 
-    </div>
+    <section class="card custom-panel">
+      <h2>Customize Panel</h2>
+      <p class="small-note">This viewer panel includes only the primary budget entries. You can choose which entries to include and adjust their budget values to explore alternative totals.</p>
+      <div class="custom-grid">
+        <div class="custom-list">
+          <div class="custom-list-header">Annual Expenses</div>
+          <div class="custom-items" id="customAnnualList"></div>
+        </div>
+        <div class="custom-list">
+          <div class="custom-list-header">Project-Based</div>
+          <div class="custom-items" id="customProjectList"></div>
+        </div>
+      </div>
+      <div class="custom-summary" style="margin-top:16px;">
+        <div class="stat total">
+          <span class="label">Custom Total Startup Request</span>
+          <div class="value" id="customGrandTotal">$0</div>
+        </div>
+        <div class="stat">
+          <span class="label">Custom Annual Expenses (3 Years)</span>
+          <div class="value" id="customAnnualTotal">$0</div>
+        </div>
+        <div class="stat">
+          <span class="label">Custom Project-Based</span>
+          <div class="value" id="customProjectTotal">$0</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
 
   <script>
     const annualItems = [
@@ -809,7 +917,7 @@
       {
         name: "Light prototyping tools / materials",
         cost: 3000,
-        desc: "Arduino, Raspberry Pi kits, sensors, motors etc.",
+        desc: "Arduino, Raspberry Pi kits, sensors, motors, robotics kits, cameras",
         projects: [1,3]
       },
       {
@@ -972,6 +1080,7 @@
     let lockedProject = null;
     let lockedTabProject = null;
     const expandedRows = {};
+    const customState = { annual: [], project: [] };
 
     function money(n) {
       return new Intl.NumberFormat('en-US', {
@@ -1253,6 +1362,69 @@
         : 'All items included';
     }
 
+    function buildCustomState() {
+      customState.annual = annualItems.map(item => ({
+        name: item.name,
+        included: !isRemoved(getItemFlag(item), item),
+        cost: getItemCost(item)
+      }));
+      customState.project = projectItems.map(item => ({
+        name: item.name,
+        included: !isRemoved(item.flag, item),
+        cost: getVisibleProjectCost(item)
+      }));
+    }
+
+    function renderCustomList(targetId, items, group) {
+      const container = document.getElementById(targetId);
+      if (!container) return;
+      container.innerHTML = '';
+      items.forEach((entry, idx) => {
+        const row = document.createElement('div');
+        row.className = 'custom-row';
+        row.innerHTML = `
+          <input type="checkbox" ${entry.included ? 'checked' : ''} data-custom-group="${group}" data-custom-index="${idx}" data-custom-type="include">
+          <div class="custom-name">${entry.name}</div>
+          <input type="number" min="0" step="1" value="${Math.round(entry.cost)}" data-custom-group="${group}" data-custom-index="${idx}" data-custom-type="cost">
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function updateCustomTotals() {
+      const annual = customState.annual.reduce((sum, entry) => sum + (entry.included ? Number(entry.cost || 0) : 0), 0) * 3;
+      const project = customState.project.reduce((sum, entry) => sum + (entry.included ? Number(entry.cost || 0) : 0), 0);
+      const grand = annual + project;
+
+      document.getElementById('customAnnualTotal').textContent = money(annual);
+      document.getElementById('customProjectTotal').textContent = money(project);
+      document.getElementById('customGrandTotal').textContent = money(grand);
+    }
+
+    function renderCustomizePanel() {
+      renderCustomList('customAnnualList', customState.annual, 'annual');
+      renderCustomList('customProjectList', customState.project, 'project');
+      updateCustomTotals();
+
+      document.querySelectorAll('[data-custom-type="include"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+          const group = e.target.dataset.customGroup;
+          const idx = Number(e.target.dataset.customIndex);
+          customState[group][idx].included = e.target.checked;
+          updateCustomTotals();
+        });
+      });
+
+      document.querySelectorAll('[data-custom-type="cost"]').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const group = e.target.dataset.customGroup;
+          const idx = Number(e.target.dataset.customIndex);
+          customState[group][idx].cost = Number(e.target.value || 0);
+          updateCustomTotals();
+        });
+      });
+    }
+
     function totalAnnual() {
       return annualItems.reduce((sum, item) => sum + (isRemoved(getItemFlag(item)) ? 0 : getItemCost(item)), 0);
     }
@@ -1274,6 +1446,8 @@
       renderProjectTable();
       updatePills();
       updateProjectCardTotals();
+      buildCustomState();
+      renderCustomizePanel();
 
       if (lockedProject) {
         applyProject(lockedProject);
