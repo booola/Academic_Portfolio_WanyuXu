@@ -291,6 +291,85 @@
       font-size: 1rem;
     }
 
+    .table-card-header {
+      padding: 14px 16px 10px;
+      background: #FFCD00;
+      color: #1f2937;
+      border-bottom: 1px solid #e6b800;
+    }
+
+    .table-card-header .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .expand-all-btn {
+      border: 1px solid #d4b11f;
+      background: #fff8cc;
+      color: #5f4b00;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .expand-all-btn:hover {
+      background: #fff2a6;
+    }
+
+    .table-card-header h3 {
+      background: transparent;
+      padding: 0;
+      border: 0;
+    }
+
+    .project-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .project-tab {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #e6c447;
+      background: #fff5a8;
+      color: #6b5300;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .project-tab.active {
+      background: #fffdf0;
+      border-color: #b88a00;
+      color: #1f2937;
+      box-shadow: 0 0 0 2px rgba(255, 205, 0, 0.28);
+    }
+
+    .project-tab.related-match {
+      background: #fff9dd;
+      border-color: #d4a800;
+      color: #1f2937;
+      box-shadow: 0 0 0 2px rgba(255, 205, 0, 0.18);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -401,6 +480,24 @@
       font-weight: 600;
     }
 
+    /* Highlight hovered project-based row */
+    .row-hover-highlight {
+      background: #fff9dd;
+      box-shadow: inset 4px 0 0 #FFCD00;
+    }
+
+    .item-hover-match {
+      outline: 2px solid #FFCD00;
+      outline-offset: -2px;
+      background: #fff9dd;
+    }
+
+    .research-item.related-match {
+      border-color: #d4a800;
+      background: #fffdf0;
+      box-shadow: 0 8px 18px rgba(255, 205, 0, 0.18);
+    }
+
     .removed {
       color: #9ca3af;
       text-decoration: line-through;
@@ -489,6 +586,13 @@
 
         <div class="conditions">
           <div class="check-row">
+            <input type="checkbox" id="niceToHave" />
+            <label for="niceToHave">
+              <strong>Nice to have (optional items removed)</strong>
+              <span>Removes selected high-cost optional items (e.g., advanced motion capture, robotic arm, 3D scanner, and studio kit).</span>
+            </label>
+          </div>
+          <div class="check-row">
             <input type="checkbox" id="studentSupport" />
             <label for="studentSupport">
               <strong>Separate support exists for student-initiated research</strong>
@@ -533,6 +637,7 @@
           <span class="pill" id="pillStudent">No external student-project support assumed</span>
           <span class="pill" id="pillProto">No shared prototyping space assumed</span>
           <span class="pill" id="pillHPC">No shared HPC assumed</span>
+          <span class="pill" id="pillNice">All items included</span>
         </div>
       </section>
 
@@ -540,7 +645,14 @@
         <h2>Detailed Budget</h2>
       <div class="tables">
         <div class="table-card">
-          <h3>Annual Expenses</h3>
+          <div class="table-card-header">
+            <div class="title-row">
+              <h3>Annual Expenses</h3>
+              <div class="header-actions">
+                <button class="expand-all-btn" type="button" id="toggleAnnualExpand">Expand all</button>
+              </div>
+            </div>
+          </div>
           <table>
             <thead>
               <tr><th>Item</th><th>Cost (w/ taxes)</th></tr>
@@ -550,7 +662,19 @@
         </div>
 
         <div class="table-card">
-          <h3>Project-Based</h3>
+          <div class="table-card-header">
+            <div class="title-row">
+              <h3>Project-Based</h3>
+              <div class="header-actions">
+                <button class="expand-all-btn" type="button" id="toggleProjectExpand">Expand all</button>
+              </div>
+            </div>
+            <div class="project-tabs">
+              <span class="project-tab" data-project-tab="1">Project 1</span>
+              <span class="project-tab" data-project-tab="2">Project 2</span>
+              <span class="project-tab" data-project-tab="3">Project 3</span>
+            </div>
+          </div>
           <table>
             <thead>
               <tr><th>Item</th><th>Cost (w/ taxes)</th></tr>
@@ -571,18 +695,22 @@
   <script>
     const annualItems = [
       {
-        name: "Conference Registration",
-        cost: 1845,
+        name: "Travel expenses to Conferences (twice)",
+        cost: 5845,
         children: [
           {
-            name: "ASEE annual conference",
+            name: "Conference Registration – ASEE",
             cost: 795,
             link: "https://www.asee.org/events/Conferences-and-Meetings/2026-Annual-Conference-Exposition/Registration"
           },
           {
-            name: "IDETC (ASME)",
+            name: "Conference Registration – IDETC (ASME)",
             cost: 1050,
             link: "https://event.asme.org/IDETC-CIE/Register"
+          },
+          {
+            name: "Travel expenses",
+            cost: 4000
           }
         ]
       },
@@ -603,17 +731,13 @@
         ]
       },
       {
-        name: "Travel expenses to Conferences (twice)",
-        cost: 4000
-      },
-      {
         name: "Open Access Cost",
         cost: 3000,
         link: "https://www.asme.org/publications-submissions/journals/information-for-authors/open-access"
       },
       {
         name: "Subscription",
-        cost: 470.64,
+        cost: 2470.64,
         children: [
           {
             name: "ChatGPT",
@@ -624,13 +748,13 @@
             name: "Claude",
             cost: 216.24,
             link: "https://claude.ai/upgrade"
+          },
+          {
+            name: "Token/Credit/Cloud Service",
+            cost: 2000,
+            link: "https://openai.com/api/pricing/"
           }
         ]
-      },
-      {
-        name: "Token/Credit/Cloud Service",
-        cost: 2000,
-        link: "https://openai.com/api/pricing/"
       },
       {
         name: "Miscellaneous",
@@ -638,39 +762,214 @@
         desc: "Software purchase/subscription, books, journal/article access, and teaching materials when not available through the library or college."
       },
       {
-        name: "Student stipend",
+        name: "Student stipend and travel fund",
         cost: 6000,
         flag: "studentSupport"
       }
     ];
 
     const projectItems = [
-      ["Workstation laptop", 4000, null, [1,2,3]],
-      ["Human-subject research incentives", 5000, null, [2,3]],
-      ["User study equipment (EEG, eye tracking, etc.)", 10000, null, [3]],
-      ["Light prototyping tools / materials", 3000, null, [1,3]],
-      ["Design exploration tools (digital sketch tools, like iPad Pro with Pencil plus Procreate purchase/subscription)", 3000, null, [3]],
-      ["Dataset (e.g. wind turbines database from thewindpower.net)", 500, null, [3]],
-      ["Travel fund (visit collaborators, etc.)", 3000, null, [1,3]],
-      ["High-performance workstation (should be able to run GPT-4-class or similar open-source LLMs locally smoothly)", 20000, "sharedHPC", [2]],
-      ["Motion capture device (wearable, mainly for hands)", 5000, null, [1,3]],
-      ["Robotic arms", 6000, "sharedProto", [1,3]],
-      ["3D scanner", 8000, "sharedProto", [1]],
-      ["AR/MR device (e.g., Magic Leap)", 5000, null, [1]],
-      ["Student travel fund", 6000, "studentSupport", [1,3]],
-      ["Student research fund (if they bring their ideas to me)", 5000, "studentSupport", []],
-      ["Data storage + backup", 3000, null, [1,2,3]],
-      ["Peripherals", 2500, null, [1,3]]
+      {
+        name: "Workstation laptop",
+        cost: 6960,
+        projects: [1,2,3],
+        children: [
+          {
+            name: "Dell Pro Max 16 Premium",
+            cost: 6960,
+            link: "https://www.dell.com/en-us/shop/dell-laptops/dell-pro-max-16-premium-laptop/spd/dell-pro-max-ma16250-laptop/xcto_ma16250_usx"
+          }
+        ]
+      },
+      {
+        name: "Human-subject research incentives",
+        cost: 5000,
+        desc: "e.g. Starbucks or Visa gift cards",
+        projects: [2,3]
+      },
+      {
+        name: "User study equipment (EEG, eye tracking, etc.)",
+        cost: 0,
+        aggregation: "sum",
+        projects: [3],
+        children: [
+          {
+            name: "EEG (NeuroFit PRO + Headband Kit)",
+            cost: 3816,
+            link: "https://store.brainbit.com/products/neurofit"
+          },
+          {
+            name: "Eye tracking (Pupil Core)",
+            cost: 3500,
+            link: "https://pupil-labs.com/products/core"
+          }
+        ]
+      },
+      {
+        name: "Light prototyping tools / materials",
+        cost: 3000,
+        desc: "Arduino, Raspberry Pi kits, sensors, motors, robotics kits, cameras",
+        projects: [1,3]
+      },
+      {
+        name: "Design exploration tools",
+        cost: 2150,
+        projects: [3],
+        children: [
+          {
+            name: "13-inch iPad Pro + Apple Pencil",
+            cost: 2150,
+            link: "https://www.apple.com/shop/buy-ipad/ipad-pro"
+          }
+        ]
+      },
+      {
+        name: "Travel fund (visit collaborators)",
+        cost: 3000,
+        projects: [1,3]
+      },
+      {
+        name: "High-performance workstation",
+        cost: 10281,
+        flag: "sharedHPC",
+        projects: [2],
+        children: [
+          {
+            name: "Mac Studio (Apple)",
+            cost: 10281,
+            link: "https://www.apple.com/shop/buy-mac/mac-studio"
+          },
+          {
+            name: "Alternative PC workstation (high-end GPU build, can exceed $40,000 depending on configuration)"
+          }
+        ]
+      },
+      {
+        name: "Motion capture device (wearable)",
+        cost: 16355,
+        projects: [1,3],
+        children: [
+          {
+            name: "MANUS Metagloves Pro HAPTIC",
+            cost: 10711,
+            optional: true,
+            link: "https://www.knoxlabs.com/products/manus-metagloves-pro-haptic"
+          },
+          {
+            name: "MINDROVE EMG Armband (8 channel ×2)",
+            cost: 1545,
+            link: "https://mindrove.com/product/emg-armband/"
+          },
+          {
+            name: "MINDROVE EMG Legband (8 channel ×2)",
+            cost: 1567,
+            link: "https://mindrove.com/product/emg-legband/"
+          },
+          {
+            name: "MINDROVE SyncBox",
+            cost: 2109,
+            link: "https://mindrove.com/product/syncbox/"
+          },
+          {
+            name: "MINDROVE Beat (ECG)",
+            cost: 423,
+            link: "https://mindrove.com/product/beat_2_channel_ecg/"
+          }
+        ]
+      },
+      {
+        name: "AR/MR device",
+        cost: 5299,
+        projects: [1],
+        children: [
+          {
+            name: "Magic Leap 2 (Magic Leap 3 is upcoming; current price based on 2nd generation)",
+            cost: 5299,
+            link: "https://www.knoxlabs.com/products/magic-leap-2"
+          }
+        ]
+      },
+      {
+        name: "3D scanner (select ONE of the following options)",
+        cost: 0,
+        aggregation: "or",
+        placeholderCost: 14200,
+        flag: "sharedProto",
+        projects: [1],
+        children: [
+          {
+            name: "Option A: Artec Eva Education Package",
+            cost: 15052,
+            link: "https://www.artec3d.com/educational-packages"
+          },
+          {
+            name: "Option B: EinScan Pro HD (with accessories)",
+            cost: 12931,
+            link: "https://machineshark.com/products/afinia-einscan-pro-hd"
+          }
+        ]
+      },
+      {
+        name: "Data storage + backup",
+        cost: 5012,
+        projects: [1,2,3],
+        children: [
+          {
+            name: "QNAP 72TB NAS system",
+            cost: 4728,
+            link: "https://www.bhphotovideo.com/c/product/1905465-REG/qnap_72tb_tvs_h1288x_12_bay_nas.html"
+          }
+        ]
+      },
+      {
+        name: "Peripherals",
+        cost: 3919,
+        projects: [1,3],
+        children: [
+          {
+            name: "RODE NT1 & AI-1 Studio Kit",
+            cost: 399,
+            optional: true,
+            link: "https://rode.com/en-us/products/nt1-ai1kit"
+          },
+          {
+            name: "RODE Wireless PRO",
+            cost: 317,
+            link: "https://rode.com/en-us/products/wireless-pro"
+          },
+          {
+            name: "Nikon Z6 III (24-120mm F/4)",
+            cost: 3180,
+            link: "https://www.nikonusa.com/p/z6iii/1890"
+          }
+        ]
+      },
+      {
+        name: "Robotic arms",
+        cost: 11978,
+        flag: "sharedProto",
+        projects: [1,3],
+        children: [
+          {
+            name: "UFACTORY xArm 6 + Gripper + Camera",
+            cost: 11978,
+            link: "https://www.ufactory.us/product/ufactory-xarm-6"
+          }
+        ]
+      }
     ];
 
     const ids = {
+      niceToHave: document.getElementById('niceToHave'),
       studentSupport: document.getElementById('studentSupport'),
       sharedProto: document.getElementById('sharedProto'),
       sharedHPC: document.getElementById('sharedHPC')
     };
 
     const researchCards = document.querySelectorAll('.research-item');
+    const projectTabs = document.querySelectorAll('.project-tab');
     let lockedProject = null;
+    let lockedTabProject = null;
     const expandedRows = {};
 
     function money(n) {
@@ -681,8 +980,31 @@
       }).format(n);
     }
 
-    function isRemoved(flag) {
-      return flag && ids[flag] && ids[flag].checked;
+    function isRemoved(flag, item) {
+      if (item && item.optional && ids.niceToHave && ids.niceToHave.checked) return true;
+      return !!(flag && ids[flag] && ids[flag].checked);
+    }
+
+    function getVisibleProjectCost(item) {
+      if (isRemoved(item.flag, item)) {
+        return 0;
+      }
+
+      const children = Array.isArray(item.children) ? item.children : [];
+      if (!children.length) {
+        return Number(item.cost || 0);
+      }
+
+      const visibleChildren = children.filter(child => !isRemoved(null, child));
+      if (!visibleChildren.length) return 0;
+
+      const aggregation = item.aggregation || ((item.name || '').toLowerCase().includes('select one') ? 'or' : 'sum');
+
+      if (aggregation === 'or') {
+        return Math.max(...visibleChildren.map(child => Number(child.cost || 0)), 0);
+      }
+
+      return visibleChildren.reduce((sum, child) => sum + Number(child.cost || 0), 0);
     }
 
     function getItemCost(item) {
@@ -699,9 +1021,9 @@
 
     function getProjectTotal(projectId) {
       return projectItems.reduce((sum, item) => {
-        const [, cost, flag, projects] = item;
-        const matched = Array.isArray(projects) && projects.includes(Number(projectId));
-        return sum + (matched && !isRemoved(flag) ? cost : 0);
+        const projects = Array.isArray(item.projects) ? item.projects : [];
+        const matched = projects.includes(Number(projectId));
+        return sum + (matched ? getVisibleProjectCost(item) : 0);
       }, 0);
     }
 
@@ -710,6 +1032,33 @@
         const amount = card.querySelector('.project-total .amount');
         if (amount) amount.textContent = money(getProjectTotal(card.dataset.project));
       });
+    }
+
+    function hasExpandedRows(prefix, items) {
+      return items.some((item, idx) => {
+        const children = Array.isArray(item.children) ? item.children : [];
+        return children.length > 0 && expandedRows[`${prefix}-${idx}`] === true;
+      });
+    }
+
+    function setAllExpanded(prefix, items, shouldExpand) {
+      items.forEach((item, idx) => {
+        const children = Array.isArray(item.children) ? item.children : [];
+        if (children.length > 0) {
+          expandedRows[`${prefix}-${idx}`] = shouldExpand;
+        }
+      });
+    }
+
+    function updateExpandAllButtons() {
+      const annualBtn = document.getElementById('toggleAnnualExpand');
+      const projectBtn = document.getElementById('toggleProjectExpand');
+      if (annualBtn) {
+        annualBtn.textContent = hasExpandedRows('annual', annualItems) ? 'Collapse all' : 'Expand all';
+      }
+      if (projectBtn) {
+        projectBtn.textContent = hasExpandedRows('proj', projectItems) ? 'Collapse all' : 'Expand all';
+      }
     }
 
     function renderAnnualTable() {
@@ -760,8 +1109,30 @@
           const key = btn.dataset.rowKey;
           expandedRows[key] = !expandedRows[key];
           renderAnnualTable();
+          updateExpandAllButtons();
         });
       });
+      updateExpandAllButtons();
+    }
+
+    function setProjectTabsActive(projects) {
+      const normalized = (projects || []).map(Number);
+      projectTabs.forEach(tab => {
+        const match = normalized.includes(Number(tab.dataset.projectTab));
+        tab.classList.toggle('active', match);
+      });
+    }
+
+    function highlightResearchCardsFromItem(projects) {
+      const normalized = (projects || []).map(Number);
+      researchCards.forEach(card => {
+        const matches = normalized.includes(Number(card.dataset.project));
+        card.classList.toggle('related-match', matches && card.dataset.project !== document.body.dataset.activeProject);
+      });
+    }
+
+    function clearRelatedResearchHighlights() {
+      researchCards.forEach(card => card.classList.remove('related-match'));
     }
 
     function renderProjectTable() {
@@ -769,29 +1140,98 @@
       tbody.innerHTML = '';
       const activeProject = document.body.dataset.activeProject || '';
 
-      projectItems.forEach(item => {
-        const [name, cost, flag, projects] = item;
-        const removed = isRemoved(flag);
-        const highlight = activeProject && Array.isArray(projects) && projects.includes(Number(activeProject));
+      projectItems.forEach((item, idx) => {
+        const removed = isRemoved(item.flag, item);
+        const visibleCost = getVisibleProjectCost(item);
+        const highlight = activeProject && Array.isArray(item.projects) && item.projects.includes(Number(activeProject));
+        const rowKey = `proj-${idx}`;
+        const expanded = expandedRows[rowKey] === true;
+        const expandable = Array.isArray(item.children) && item.children.length > 0;
+
         const tr = document.createElement('tr');
         if (highlight) tr.classList.add('project-match');
+        tr.dataset.projects = (item.projects || []).join(',');
         tr.innerHTML = `
-          <td class="${removed ? 'removed' : ''}">${name}</td>
-          <td class="${removed ? 'removed' : ''}">${removed ? money(0) : money(cost)}</td>
+          <td class="${removed ? 'removed' : ''}">
+            <div class="detail-name">
+              ${expandable ? `<button class="expand-btn" type="button" data-row-key="${rowKey}">${expanded ? '−' : '+'}</button>` : '<span style="width:22px; display:inline-block;"></span>'}
+              <div class="detail-main">
+                <div>${item.name} ${item.desc ? `<span class="tooltip">ⓘ<span class="tooltip-text">${item.desc}</span></span>` : ''}</div>
+              </div>
+            </div>
+          </td>
+          <td class="${removed ? 'removed' : ''}">${money(visibleCost)}</td>
         `;
         tbody.appendChild(tr);
+
+        if (expandable && expanded) {
+          item.children.forEach(child => {
+            const childRemoved = isRemoved(null, child) || removed;
+            const sub = document.createElement('tr');
+            sub.classList.add('sub-row');
+            sub.innerHTML = `
+              <td class="${childRemoved ? 'removed' : ''}">
+                <div class="detail-main">
+                  <div>- ${child.link ? `<a href="${child.link}" target="_blank" rel="noopener noreferrer">${child.name}</a>` : child.name}</div>
+                </div>
+              </td>
+              <td class="${childRemoved ? 'removed' : ''}">${childRemoved ? money(0) : money(child.cost)}</td>
+            `;
+            tbody.appendChild(sub);
+          });
+        }
       });
+
+      tbody.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const key = btn.dataset.rowKey;
+          expandedRows[key] = !expandedRows[key];
+          renderProjectTable();
+          updateExpandAllButtons();
+        });
+      });
+
+      tbody.querySelectorAll('tr').forEach(row => {
+        if (!row.dataset.projects) return;
+
+        row.addEventListener('mouseenter', () => {
+          const projects = (row.dataset.projects || '').split(',').map(Number).filter(Boolean);
+          highlightResearchCardsFromItem(projects);
+          row.classList.add('row-hover-highlight');
+          if (lockedTabProject === null) {
+            setProjectTabsActive(projects);
+          }
+        });
+
+        row.addEventListener('mouseleave', () => {
+          clearRelatedResearchHighlights();
+          row.classList.remove('row-hover-highlight');
+
+          if (lockedProject) {
+            applyProject(lockedProject);
+          } else if (lockedTabProject !== null) {
+            setProjectTabsActive([lockedTabProject]);
+          } else {
+            setProjectTabsActive([]);
+          }
+        });
+      });
+
+      updateExpandAllButtons();
     }
 
-    function totalAnnual() {
-      return annualItems.reduce((sum, item) => sum + (isRemoved(getItemFlag(item)) ? 0 : getItemCost(item)), 0);
-    }
-
-    function totalProject() {
-      return projectItems.reduce((sum, item) => {
-        const [, cost, flag] = item;
-        return sum + (isRemoved(flag) ? 0 : cost);
-      }, 0);
+    function applyProject(projectId) {
+      document.body.dataset.activeProject = projectId || '';
+      researchCards.forEach(card => {
+        card.classList.toggle('active-project', card.dataset.project === projectId);
+        card.classList.remove('related-match');
+      });
+      if (lockedTabProject === null) {
+        setProjectTabsActive(projectId ? [Number(projectId)] : []);
+      }
+      renderProjectTable();
+      updateProjectCardTotals();
     }
 
     function updatePills() {
@@ -806,15 +1246,18 @@
       document.getElementById('pillHPC').textContent = ids.sharedHPC.checked
         ? 'Shared HPC assumed'
         : 'No shared HPC assumed';
+
+      document.getElementById('pillNice').textContent = ids.niceToHave.checked
+        ? 'Nice-to-have items removed'
+        : 'All items included';
     }
 
-    function applyProject(projectId) {
-      document.body.dataset.activeProject = projectId || '';
-      researchCards.forEach(card => {
-        card.classList.toggle('active-project', card.dataset.project === projectId);
-      });
-      renderProjectTable();
-      updateProjectCardTotals();
+    function totalAnnual() {
+      return annualItems.reduce((sum, item) => sum + (isRemoved(getItemFlag(item)) ? 0 : getItemCost(item)), 0);
+    }
+
+    function totalProject() {
+      return projectItems.reduce((sum, item) => sum + getVisibleProjectCost(item), 0);
     }
 
     function update() {
@@ -830,6 +1273,13 @@
       renderProjectTable();
       updatePills();
       updateProjectCardTotals();
+
+      if (lockedProject) {
+        applyProject(lockedProject);
+      }
+      if (lockedTabProject !== null) {
+        setProjectTabsActive([lockedTabProject]);
+      }
     }
 
     researchCards.forEach(card => {
@@ -858,6 +1308,56 @@
           applyProject(lockedProject);
         }
       });
+    });
+
+    projectTabs.forEach(tab => {
+      tab.addEventListener('mouseenter', () => {
+        if (lockedTabProject === null) {
+          const projectId = Number(tab.dataset.projectTab);
+          setProjectTabsActive([projectId]);
+          applyProject(String(projectId));
+        }
+      });
+
+      tab.addEventListener('mouseleave', () => {
+        if (lockedTabProject === null && lockedProject === null) {
+          setProjectTabsActive([]);
+          applyProject('');
+        } else if (lockedTabProject === null && lockedProject !== null) {
+          applyProject(lockedProject);
+        }
+      });
+
+      tab.addEventListener('click', () => {
+        const projectId = Number(tab.dataset.projectTab);
+        if (lockedTabProject === projectId) {
+          lockedTabProject = null;
+          if (lockedProject) {
+            applyProject(lockedProject);
+          } else {
+            setProjectTabsActive([]);
+            applyProject('');
+          }
+        } else {
+          lockedTabProject = projectId;
+          setProjectTabsActive([projectId]);
+          applyProject(String(projectId));
+        }
+      });
+    });
+
+    document.getElementById('toggleAnnualExpand')?.addEventListener('click', () => {
+      const shouldExpand = !hasExpandedRows('annual', annualItems);
+      setAllExpanded('annual', annualItems, shouldExpand);
+      renderAnnualTable();
+      updateExpandAllButtons();
+    });
+
+    document.getElementById('toggleProjectExpand')?.addEventListener('click', () => {
+      const shouldExpand = !hasExpandedRows('proj', projectItems);
+      setAllExpanded('proj', projectItems, shouldExpand);
+      renderProjectTable();
+      updateExpandAllButtons();
     });
 
     Object.values(ids).forEach(input => input.addEventListener('change', update));
